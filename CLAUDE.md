@@ -109,3 +109,22 @@ bun --hot ./index.ts
 ```
 
 For more information, read the Bun API docs in `node_modules/bun-types/docs/**.mdx`.
+
+## Do Not Modify Test Files
+
+Test files and test configuration are owned by the team and must not be modified unless the user **explicitly** asks for changes to a test file.
+
+### Protected paths
+
+- `**/*.test.ts` / `**/*.test.tsx`
+- `**/*.spec.ts` / `**/*.spec.tsx`
+- `src/tests/**`
+- `**/__tests__/**`
+- `bunfig.toml`
+
+### Rules
+
+- **Never** edit, create, or delete any file matching the patterns above unless the user's request is specifically and unambiguously about changing a test or test configuration.
+- If a code change would require a test file to be updated, **stop and inform the user** instead of updating it yourself.
+- Do not refactor, reformat, rename, or add/remove imports in test files as a side effect of other work.
+- Do not "fix" failing tests by changing the test — fix the source code instead.

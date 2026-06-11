@@ -1,5 +1,9 @@
 import { SQL } from "bun";
-import { GenericContainer, Wait } from "testcontainers";
+import {
+  GenericContainer,
+  Wait,
+  type StartedTestContainer,
+} from "testcontainers";
 import { join } from "path";
 
 /*
@@ -10,7 +14,7 @@ ger oss en ny färsk postgres databas som vi kan testa på.
 */
 
 // Läser in vår schema.sql fil som innehåller SQL-kod för att skapa vår databasstruktur.
-const SCHEMA_PATH = join(import.meta.dirname, "../../src/db/schema.sql");
+const SCHEMA_PATH = join(import.meta.dirname, "../../db/schema.sql");
 
 export const createTestDatabase = async () => {
   const POSTGRES_USER = "postgres";
@@ -24,13 +28,9 @@ export const createTestDatabase = async () => {
       POSTGRES_PASSWORD: POSTGRES_PASSWORD,
     })
     .withExposedPorts(5432)
-    .withHealthCheck({
-      test: ["CMD-SHELL", "pg_isready -U postgres -d socialapp_test"],
-      interval: 500,
-      timeout: 3000,
-      retries: 5,
-    })
-    .withWaitStrategy(Wait.forHealthCheck())
+    .withWaitStrategy(
+      Wait.forLogMessage(/database system is ready to accept connections/, 2),
+    )
     .start();
 
   const databaseUrl = `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${container.getHost()}:${container.getMappedPort(5432)}/socialapp_test`;
@@ -44,4 +44,8 @@ export const createTestDatabase = async () => {
     container,
     db,
   };
+};
+
+export const teardownTestDatabase = async (container: StartedTestContainer) => {
+  await container.stop();
 };
