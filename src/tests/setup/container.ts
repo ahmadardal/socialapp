@@ -49,3 +49,7 @@ export const createTestDatabase = async () => {
 export const teardownTestDatabase = async (container: StartedTestContainer) => {
   await container.stop();
 };
+
+export const clearTestDatabase = async (db: SQL) => {
+  await db`TRUNCATE TABLE users, follower_relationships, posts, comments, reactions RESTART IDENTITY CASCADE;`;
+};

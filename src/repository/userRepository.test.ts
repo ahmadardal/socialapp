@@ -1,5 +1,6 @@
-import { describe, mock, it, expect, afterAll } from "bun:test";
+import { describe, mock, it, expect, afterAll, beforeEach } from "bun:test";
 import {
+  clearTestDatabase,
   createTestDatabase,
   teardownTestDatabase,
 } from "../tests/setup/container";
@@ -29,6 +30,10 @@ const baseUser: RegisterRequest = {
   birthdate: "1990-01-01",
   password: "securepassword",
 };
+
+beforeEach(async () => {
+  await clearTestDatabase(testDb.db);
+});
 
 afterAll(async () => {
   // Detta körs efter alla tester har genomförts.
