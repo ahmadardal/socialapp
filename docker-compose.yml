@@ -13,10 +13,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d socialapp" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d socialapp"]
       interval: 5s
       timeout: 5s
       retries: 5
+
   backend:
     build:
       context: .
